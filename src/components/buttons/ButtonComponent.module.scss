@@ -1,0 +1,36 @@
+@import "colors.scss";
+
+.main {
+    border: none;
+    outline: none;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    height: 40px;
+
+    cursor: pointer;
+
+    border-radius: 4px;
+}
+
+.outline {
+    border: 1px solid $clr-ctx;
+    color: $clr-ctx;
+    background-color: $clr-bg;
+}
+
+.fill {
+    color: $clr-bg;
+    background-color: $clr-ctx;
+}
+
+.sm {
+    width: 140px;
+}
+
+.lg {
+    width: 200px;
+}

@@ -1,0 +1,123 @@
+@import url("https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700&family=Poppins:wght@300;400&display=swap");
+@import "colors.scss";
+
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    background-color: $clr-bg;
+    color: $clr-fg;
+}
+
+.txt-fg-em-lg {
+    font-family: "Alegreya";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 44px;
+}
+
+.txt-fg-em-md {
+    font-family: "Alegreya";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 33px;
+}
+
+.txt-fg-nm-sm {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.txt-fg-nm-xs {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 18px;
+}
+
+.txt-ctx-em-lg {
+    font-family: "Alegreya";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 44px;
+
+    color: $clr-ctx;
+}
+
+.txt-ctx-em-md {
+    font-family: "Alegreya";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 33px;
+
+    color: $clr-ctx;
+}
+
+.txt-ctx-nm-sm {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+
+    color: $clr-ctx;
+}
+
+.txt-ctx-nm-xs {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 18px;
+
+    color: $clr-ctx;
+}
+
+
+.txt-bg-em-lg {
+    font-family: "Alegreya";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 44px;
+
+    color: $clr-bg;
+}
+
+.txt-bg-em-md {
+    font-family: "Alegreya";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 33px;
+
+    color: $clr-bg;
+}
+
+.txt-bg-nm-sm {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+
+    color: $clr-bg;
+}
+
+.txt-bg-nm-xs {
+    font-family: "Poppins";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 18px;
+
+    color: $clr-bg;
+}
