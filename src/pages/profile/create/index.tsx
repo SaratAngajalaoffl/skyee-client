@@ -1,14 +1,17 @@
-import classes from "./CreatePage.module.scss";
-import { FileUploader } from "react-drag-drop-files";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { FileUploader } from "react-drag-drop-files";
+import ReactPlayer from "react-player";
+import { useCreateAsset } from "@livepeer/react";
 
 import uploadIcon from "@/assets/images/upload.png";
 import HeadComponent from "@/components/head/HeadComponent";
-import ReactPlayer from "react-player";
 import TextField from "@/components/input/TextField";
 import TextArea from "@/components/input/TextArea";
 import ButtonComponent from "@/components/buttons/ButtonComponent";
+
+import classes from "./CreatePage.module.scss";
+import { Circle } from "rc-progress";
 
 const videoTypes = ["MP4"];
 const thumbnailTypes = ["GIF", "PNG", "WEBP", "JPEG"];
@@ -20,6 +23,29 @@ const CreatePage = () => {
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [price, setPrice] = useState<number>(0);
+
+    const {
+        mutate: uploadVideoToLivePeer,
+        data: assets,
+        status,
+        progress,
+        error,
+    } = useCreateAsset(
+        video
+            ? {
+                  sources: [{ name: video.name, file: video }] as const,
+              }
+            : null
+    );
+
+    useEffect(() => {
+        console.log({
+            status,
+            progress,
+            error,
+            assets,
+        });
+    }, [status, progress, error, assets]);
 
     const handleVideoDrop = (file: File) => {
         console.log(URL.createObjectURL(file));
@@ -35,7 +61,7 @@ const CreatePage = () => {
         <>
             <HeadComponent title="Skyee - Upload Video" />
             <div className={classes.main}>
-                {!video ? (
+                {!video && (
                     <FileUploader
                         classes={classes.video_upload}
                         multiple={false}
@@ -58,7 +84,8 @@ const CreatePage = () => {
                             </span>
                         </div>
                     </FileUploader>
-                ) : (
+                )}
+                {video && status === "idle" && (
                     <div className={classes.video_details}>
                         <div className={classes.uploaded_video}>
                             <ReactPlayer
@@ -66,7 +93,7 @@ const CreatePage = () => {
                                 controls={true}
                             />
                         </div>
-                        <form className={classes.details_form}>
+                        <div className={classes.details_form}>
                             <FileUploader
                                 classes={classes.thumbnail_upload}
                                 multiple={false}
@@ -117,7 +144,7 @@ const CreatePage = () => {
                             <TextField
                                 value={price.toString()}
                                 onChange={(e) =>
-                                    setPrice(parseFloat(e.target.value))
+                                    setPrice(parseFloat(e.target.value || "0"))
                                 }
                                 size="fill"
                                 label="Price in $SKY"
@@ -128,9 +155,19 @@ const CreatePage = () => {
                                 title="Upload"
                                 width="lg"
                                 filled
-                                onClick={() => {}}
+                                onClick={() => uploadVideoToLivePeer?.()}
                             />
-                        </form>
+                        </div>
+                    </div>
+                )}
+                {video && status === "loading" && (
+                    <div className={classes.progress_container}>
+                        <Circle
+                            percent={(progress?.[0].progress || 0) * 100}
+                            strokeWidth={4}
+                            strokeColor="#371622"
+                        />
+                        {progress?.[0].phase}
                     </div>
                 )}
             </div>
