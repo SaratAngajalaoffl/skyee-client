@@ -6,6 +6,9 @@ const nextConfig = {
     sassOptions: {
         includePaths: ["./src/styles"],
     },
+    images: {
+        domains: ["static-cse.canva.com"],
+    },
 };
 
 module.exports = nextConfig;

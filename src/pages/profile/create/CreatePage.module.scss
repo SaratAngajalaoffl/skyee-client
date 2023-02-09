@@ -1,0 +1,87 @@
+.main {
+    padding: 30px;
+
+    display: flex;
+    flex-direction: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.video_upload {
+    margin-top: 20vh;
+}
+
+.video_upload_area {
+    width: 480px;
+    height: 270px;
+    border: 1px solid black;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+}
+
+.video_details {
+    flex: 1;
+
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.uploaded_video {
+    flex: 2;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.details_form {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-around;
+    
+    padding: 30px;
+}
+
+.thumbnail_upload {
+    width: 100%;
+
+    margin: 40px 0px;
+}
+
+.thumbnail_upload_area {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: 1px solid black;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+}
+
+.upload_cta {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.video_title_input {
+    margin: 10px 0px;
+}
+
+.video_description_input {
+    margin: 10px 0px;
+}
+

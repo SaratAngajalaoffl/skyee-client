@@ -1,0 +1,33 @@
+@keyframes dropdown {
+    from {
+        height: 0px;
+    }
+
+    to {
+        height: 160px;
+    }
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0px;
+
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+
+    animation: dropdown 0.2s linear 0s;
+    overflow: hidden;
+
+    border-radius: 4px;
+    z-index: 2;
+}
+
+.dropdown_item {
+    width: 200px;
+    height: 40px;
+
+    display: flex;
+    padding: 10px;
+
+    text-decoration: none;
+}

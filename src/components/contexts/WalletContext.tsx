@@ -3,20 +3,21 @@ import {
     createContext,
     useCallback,
     useContext,
-    useEffect,
     useState,
 } from "react";
 
 type IWalletContext = {
-    isInitiating: boolean;
+    isLoading: boolean;
     account: string | null;
     ethersProvider: ethers.providers.Web3Provider | null;
+    updateWeb3: () => any;
 };
 
 const walletContext = createContext<IWalletContext>({
-    isInitiating: true,
+    isLoading: false,
     account: null,
     ethersProvider: null,
+    updateWeb3: () => {},
 });
 
 type Props = {
@@ -24,13 +25,13 @@ type Props = {
 };
 
 const WalletContextProvider = ({ children }: Props) => {
-    const [isInitiating, setIsInitiating] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [ethersProvider, setEthersProvider] =
         useState<ethers.providers.Web3Provider | null>(null);
     const [account, setAccount] = useState<string | null>(null);
 
     const updateWeb3 = useCallback(async () => {
-        setIsInitiating(true);
+        setIsLoading(true);
 
         if (!window?.ethereum) return;
 
@@ -47,16 +48,12 @@ const WalletContextProvider = ({ children }: Props) => {
             setEthersProvider(provider);
         }
 
-        setIsInitiating(false);
+        setIsLoading(false);
     }, []);
-
-    useEffect(() => {
-        updateWeb3();
-    }, [updateWeb3]);
 
     return (
         <walletContext.Provider
-            value={{ isInitiating, account, ethersProvider }}
+            value={{ isLoading, account, ethersProvider, updateWeb3 }}
         >
             {children}
             <div></div>

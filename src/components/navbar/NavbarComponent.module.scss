@@ -2,11 +2,15 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 50px;
+    padding: 30px;
 }
 
 .actions {
     display: flex;
     flex-direction: row;
     align-items: center;
+}
+
+.dropdown_parent {
+    position: relative;
 }
