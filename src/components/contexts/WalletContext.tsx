@@ -1,16 +1,14 @@
+import { userCollection } from "@/utils/pocketbase";
 import { ethers } from "ethers";
-import {
-    createContext,
-    useCallback,
-    useContext,
-    useState,
-} from "react";
+import { Record } from "pocketbase";
+import { createContext, useCallback, useContext, useState } from "react";
 
 type IWalletContext = {
     isLoading: boolean;
     account: string | null;
     ethersProvider: ethers.providers.Web3Provider | null;
     updateWeb3: () => any;
+    user: Record | null;
 };
 
 const walletContext = createContext<IWalletContext>({
@@ -18,6 +16,7 @@ const walletContext = createContext<IWalletContext>({
     account: null,
     ethersProvider: null,
     updateWeb3: () => {},
+    user: null,
 });
 
 type Props = {
@@ -29,6 +28,7 @@ const WalletContextProvider = ({ children }: Props) => {
     const [ethersProvider, setEthersProvider] =
         useState<ethers.providers.Web3Provider | null>(null);
     const [account, setAccount] = useState<string | null>(null);
+    const [user, setUser] = useState<Record | null>(null);
 
     const updateWeb3 = useCallback(async () => {
         setIsLoading(true);
@@ -44,6 +44,24 @@ const WalletContextProvider = ({ children }: Props) => {
         const address = await signer.getAddress();
 
         if (address) {
+            try {
+                const userRecord = await userCollection.getFirstListItem(
+                    `address = "${address}"`
+                );
+
+                setUser(userRecord);
+            } catch (err) {
+                try {
+                    const userRecord = await userCollection.create({
+                        address,
+                    });
+
+                    setUser(userRecord);
+                } catch (err1) {
+                    console.log({ err1 });
+                }
+            }
+
             setAccount(address);
             setEthersProvider(provider);
         }
@@ -53,7 +71,7 @@ const WalletContextProvider = ({ children }: Props) => {
 
     return (
         <walletContext.Provider
-            value={{ isLoading, account, ethersProvider, updateWeb3 }}
+            value={{ isLoading, account, ethersProvider, updateWeb3, user }}
         >
             {children}
             <div></div>

@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { FileUploader } from "react-drag-drop-files";
 import ReactPlayer from "react-player";
-import { useCreateAsset } from "@livepeer/react";
+import { Asset, useCreateAsset } from "@livepeer/react";
 
 import uploadIcon from "@/assets/images/upload.png";
 import HeadComponent from "@/components/head/HeadComponent";
@@ -12,24 +12,33 @@ import ButtonComponent from "@/components/buttons/ButtonComponent";
 
 import classes from "./CreatePage.module.scss";
 import { Circle } from "rc-progress";
+import ConnectWalletWarningModal from "@/components/modals/ConnectWalletWarningModal";
+import { useWalletContext } from "@/components/contexts/WalletContext";
+import { videoCollection } from "@/utils/pocketbase";
+import { useRouter } from "next/router";
 
 const videoTypes = ["MP4"];
 const thumbnailTypes = ["GIF", "PNG", "WEBP", "JPEG"];
 
 const CreatePage = () => {
     const [video, setVideo] = useState<File | null>(null);
+    const [videoPreview, setVideoPreview] = useState<string>("");
     const [thumbnail, setThumbail] = useState<File | null>(null);
+    const [thumbnailPreview, setThumbailPreview] = useState<string>("");
 
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [price, setPrice] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const { user } = useWalletContext();
+    const router = useRouter();
 
     const {
         mutate: uploadVideoToLivePeer,
         data: assets,
         status,
         progress,
-        error,
     } = useCreateAsset(
         video
             ? {
@@ -38,27 +47,45 @@ const CreatePage = () => {
             : null
     );
 
+    const handleVideoUploadSuccess = useCallback(
+        async (asset: Asset) => {
+            if (!user) return;
+
+            setLoading(true);
+
+            const videoRecord = await videoCollection.create({
+                title,
+                description,
+                price,
+                asset_id: asset.id,
+                playback_id: asset.playbackId,
+                playback_url: asset.playbackUrl || "https://google.com",
+                uploader: user.id,
+            });
+
+            router.push(`/video/${videoRecord}`);
+        },
+        [title, description, price, user, router]
+    );
+
     useEffect(() => {
-        console.log({
-            status,
-            progress,
-            error,
-            assets,
-        });
-    }, [status, progress, error, assets]);
+        if (status === "success" && assets && !loading)
+            handleVideoUploadSuccess(assets[0]);
+    }, [status, assets, handleVideoUploadSuccess, loading]);
 
     const handleVideoDrop = (file: File) => {
-        console.log(URL.createObjectURL(file));
         setVideo(file);
+        setVideoPreview(URL.createObjectURL(file));
     };
 
     const handleThumbnailDrop = (file: File) => {
-        console.log(URL.createObjectURL(file));
         setThumbail(file);
+        setThumbailPreview(URL.createObjectURL(file));
     };
 
     return (
         <>
+            <ConnectWalletWarningModal />
             <HeadComponent title="Skyee - Upload Video" />
             <div className={classes.main}>
                 {!video && (
@@ -88,10 +115,7 @@ const CreatePage = () => {
                 {video && status === "idle" && (
                     <div className={classes.video_details}>
                         <div className={classes.uploaded_video}>
-                            <ReactPlayer
-                                url={URL.createObjectURL(video)}
-                                controls={true}
-                            />
+                            <ReactPlayer url={videoPreview} controls={true} />
                         </div>
                         <div className={classes.details_form}>
                             <FileUploader
@@ -104,7 +128,7 @@ const CreatePage = () => {
                                 <div className={classes.thumbnail_upload_area}>
                                     {thumbnail ? (
                                         <Image
-                                            src={URL.createObjectURL(thumbnail)}
+                                            src={thumbnailPreview}
                                             alt="thumbnail"
                                             fill
                                         />
@@ -169,6 +193,9 @@ const CreatePage = () => {
                         />
                         {progress?.[0].phase}
                     </div>
+                )}
+                {video && status === "success" && (
+                    <div>Please Wait! redirecting...</div>
                 )}
             </div>
         </>
