@@ -7,7 +7,7 @@ const nextConfig = {
         includePaths: ["./src/styles"],
     },
     images: {
-        domains: ["static-cse.canva.com"],
+        domains: ["127.0.0.1"],
     },
 };
 

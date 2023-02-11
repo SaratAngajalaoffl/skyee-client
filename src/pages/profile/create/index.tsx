@@ -49,23 +49,32 @@ const CreatePage = () => {
 
     const handleVideoUploadSuccess = useCallback(
         async (asset: Asset) => {
-            if (!user) return;
+            if (!user || !thumbnail) return;
 
             setLoading(true);
 
-            const videoRecord = await videoCollection.create({
-                title,
-                description,
-                price,
-                asset_id: asset.id,
-                playback_id: asset.playbackId,
-                playback_url: asset.playbackUrl || "https://google.com",
-                uploader: user.id,
-            });
+            const formdata = new FormData();
 
-            router.push(`/video/${videoRecord}`);
+            formdata.append("title", title);
+            formdata.append("description", description);
+            formdata.append("price", price.toString());
+            formdata.append("asset_id", asset.id);
+            formdata.append(
+                "playback_id",
+                asset.playbackId || "https://google.com"
+            );
+            formdata.append(
+                "playback_url",
+                asset.playbackUrl || "https://google.com"
+            );
+            formdata.append("uploader", user.id);
+            formdata.append("thumbnail", thumbnail);
+
+            const videoRecord = await videoCollection.create(formdata);
+
+            router.push(`/video/${videoRecord.id}`);
         },
-        [title, description, price, user, router]
+        [title, description, price, user, thumbnail, router]
     );
 
     useEffect(() => {

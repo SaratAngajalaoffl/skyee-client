@@ -1,37 +1,102 @@
-import { Player, useAsset } from "@livepeer/react";
+import VideoHorizontalCard from "@/components/cards/VideoHorizontalCard";
+import HeadComponent from "@/components/head/HeadComponent";
+import { pb_client, videoCollection } from "@/utils/pocketbase";
+import { Player } from "@livepeer/react";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { Record } from "pocketbase";
+import { VideoRecord } from "types/pocketbase-types";
 
 import classes from "./VideoPlayer.module.scss";
 
-const PosterImage = () => {
+type PosterImageProps = {
+    thumbnail?: string;
+};
+
+type VideoPlayerProps = {
+    video: VideoRecord;
+    suggestions: (VideoRecord & Record)[];
+};
+
+const DEFAULT_THUMBNAIL = "";
+
+const PLAYER_THEME = {
+    borderStyles: {},
+    colors: {
+        accent: "#C3688B",
+    },
+    space: {
+        controlsBottomMarginX: "10px",
+        controlsBottomMarginY: "5px",
+        controlsTopMarginX: "15px",
+        controlsTopMarginY: "10px",
+    },
+    radii: {
+        containerBorderRadius: "0px",
+    },
+};
+
+const PosterImage = ({ thumbnail }: PosterImageProps) => {
+    return <Image src={thumbnail || DEFAULT_THUMBNAIL} alt="thumbnail" fill />;
+};
+
+const VideoPlayer = ({ video, suggestions }: VideoPlayerProps) => {
     return (
-        <Image
-            src="https://static-cse.canva.com/blob/1003136/1600w-wK95f3XNRaM.jpg"
-            alt="thumbnail"
-            fill
-        />
+        <>
+            <HeadComponent title={`${video.title}`} />
+            <div className={classes.main}>
+                <div className={classes.player_container}>
+                    <Player
+                        title={video.title}
+                        playbackId={video?.playback_id}
+                        poster={<PosterImage thumbnail={video.thumbnail} />}
+                        theme={PLAYER_THEME}
+                        objectFit="cover"
+                        priority
+                    />
+                </div>
+                <div className={classes.suggestions_container}>
+                    {suggestions.map((suggestion) => (
+                        <VideoHorizontalCard
+                            key={suggestion.id}
+                            video={suggestion}
+                        />
+                    ))}
+                </div>
+            </div>
+        </>
     );
 };
 
-const VideoPlayer = () => {
-    const router = useRouter();
-    const { vid } = router.query;
+export const getServerSideProps = async ({
+    params,
+}: {
+    params: { vid: string };
+}) => {
+    const videoRecord = await videoCollection.getOne(params.vid);
 
-    const { data: asset } = useAsset("83cfb58c-83ab-4d95-8d8f-f8faaba89850");
+    const suggestions = await videoCollection.getFullList(20, {
+        filter: `id != "${params.vid}"`,
+    });
 
-    return (
-        <div className={classes.main}>
-            <Player
-                title="Agent 327: Operation Barbershop"
-                playbackId={asset?.playbackId}
-                poster={<PosterImage />}
-                showPipButton
-                objectFit="cover"
-                priority
-            />{" "}
-        </div>
-    );
+    return {
+        props: {
+            video: {
+                playback_id: videoRecord.playback_id || "",
+                title: videoRecord.title,
+                thumbnail: pb_client.getFileUrl(
+                    videoRecord,
+                    videoRecord.thumbnail
+                ),
+            },
+            suggestions: suggestions.map((item) => ({
+                id: item.id,
+                title: item.title,
+                thumbnail: pb_client.getFileUrl(item, item.thumbnail),
+                description: item.description,
+                uploader: item.uploader
+            })),
+        },
+    };
 };
 
 export default VideoPlayer;

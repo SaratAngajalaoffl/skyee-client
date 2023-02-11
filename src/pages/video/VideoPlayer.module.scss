@@ -1,3 +1,20 @@
 .main {
     padding: 30px;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.player_container {
+    width: 1190px;
+    padding: 10px;
+}
+
+.suggestions_container {
+    flex: 1;
+    
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
 }

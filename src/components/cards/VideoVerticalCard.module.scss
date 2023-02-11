@@ -1,0 +1,37 @@
+.main {
+    width: 24%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    text-decoration: none;
+}
+
+.image {
+    width: 100%;
+    aspect-ratio: 16/9;
+
+    position: relative;
+}
+
+.video_details {
+    display: flex;
+    flex-direction: row;
+
+    align-items: flex-start;
+    padding: 10px;
+
+    height: 100px;
+    overflow: hidden;
+}
+
+.text_details {
+    flex: 1;
+
+    padding: 0px 10px;
+}
+
+.avatar {
+    border-radius: 50%;
+}

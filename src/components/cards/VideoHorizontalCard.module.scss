@@ -1,0 +1,42 @@
+.main {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    text-decoration: none;
+    height: 100px;
+
+    margin: 10px;
+}
+
+.image {
+    height: 100%;
+    aspect-ratio: 16/9;
+
+    position: relative;
+}
+
+.video_details {
+    display: flex;
+    flex-direction: row;
+
+    align-items: flex-start;
+
+    height: 100px;
+    overflow: hidden;
+}
+
+.text_details {
+    flex: 1;
+
+    padding: 0px 10px;
+}
+
+.avatar {
+    border-radius: 50%;
+
+    width: 10px;
+    height: 10px;
+
+    margin-top: 10px;
+}

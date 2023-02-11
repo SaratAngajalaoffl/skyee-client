@@ -8,6 +8,7 @@ import metamaskIcon from "@/assets/images/metamask.png";
 import classes from "./NavbarComponent.module.scss";
 import DropdownComponent, { DropdownItem } from "../dropdown/DropdownComponent";
 import { useRouter } from "next/router";
+import Logo from "../logo/Logo";
 
 const NavbarComponent = () => {
     const { isLoading, account, updateWeb3 } = useWalletContext();
@@ -50,7 +51,7 @@ const NavbarComponent = () => {
 
     const items: DropdownItem[] = [
         {
-            action: "profile/create",
+            action: "/profile/create",
             title: "Create Video",
         },
         {
@@ -73,7 +74,7 @@ const NavbarComponent = () => {
 
     return (
         <div className={classes.main}>
-            <p className={`txt-ctx-em-lg`}>Skyee</p>
+            <Logo />
             <div className={classes.actions}>
                 <div className={classes.dropdown_parent}>
                     <ButtonComponent

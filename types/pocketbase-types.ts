@@ -43,6 +43,7 @@ export type VideoRecord = {
 	playback_id: string
 	playback_url: string
 	uploader: RecordIdString
+	thumbnail: string
 }
 
 // Response types include system fields and match responses from the PocketBase API

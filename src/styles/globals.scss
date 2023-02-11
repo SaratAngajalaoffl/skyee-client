@@ -5,6 +5,9 @@
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
+}
+
+body {
     background-color: $clr-bg;
     color: $clr-fg;
 }
@@ -15,6 +18,8 @@
     font-weight: 700;
     font-size: 32px;
     line-height: 44px;
+
+    color: $clr-fg;
 }
 
 .txt-fg-em-md {
@@ -23,6 +28,8 @@
     font-weight: 500;
     font-size: 24px;
     line-height: 33px;
+
+    color: $clr-fg;
 }
 
 .txt-fg-nm-sm {
@@ -31,6 +38,8 @@
     font-weight: 400;
     font-size: 16px;
     line-height: 24px;
+
+    color: $clr-fg;
 }
 
 .txt-fg-nm-xs {
@@ -39,6 +48,8 @@
     font-weight: 300;
     font-size: 12px;
     line-height: 18px;
+
+    color: $clr-fg;
 }
 
 .txt-ctx-em-lg {
@@ -80,7 +91,6 @@
 
     color: $clr-ctx;
 }
-
 
 .txt-bg-em-lg {
     font-family: "Alegreya";
