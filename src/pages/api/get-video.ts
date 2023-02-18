@@ -72,7 +72,7 @@ export default async function handler(
                 }
             );
 
-            await tx.wait();
+            // await tx.wait();
 
             res.status(201).json({
                 video: videoRecord as VideoRecord & Record,
