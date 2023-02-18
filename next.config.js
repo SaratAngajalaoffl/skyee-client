@@ -7,7 +7,7 @@ const nextConfig = {
         includePaths: ["./src/styles"],
     },
     images: {
-        domains: ["170-187-248-131.ip.linodeusercontent.com"],
+        domains: ["pb.saratangajala.com"],
     },
 };
 
