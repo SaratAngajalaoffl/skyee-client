@@ -7,7 +7,7 @@ const nextConfig = {
         includePaths: ["./src/styles"],
     },
     images: {
-        domains: ["127.0.0.1"],
+        domains: ["170-187-248-131.ip.linodeusercontent.com"],
     },
 };
 

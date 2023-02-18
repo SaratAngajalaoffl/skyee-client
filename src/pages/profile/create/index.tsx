@@ -17,7 +17,7 @@ import { useWalletContext } from "@/components/contexts/WalletContext";
 import { videoCollection } from "@/utils/pocketbase";
 import { useRouter } from "next/router";
 
-const videoTypes = ["MP4"];
+const videoTypes = ["MP4","flv","mkv"];
 const thumbnailTypes = ["GIF", "PNG", "WEBP", "JPEG"];
 
 const CreatePage = () => {

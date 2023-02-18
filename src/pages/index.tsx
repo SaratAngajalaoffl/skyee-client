@@ -35,6 +35,7 @@ export const getServerSideProps = async () => {
                 title: record.title,
                 description: record.description,
                 thumbnail: pb_client.getFileUrl(record, record.thumbnail),
+                uploader: record.uploader,
             })),
         },
     };

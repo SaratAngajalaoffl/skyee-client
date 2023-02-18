@@ -10,7 +10,7 @@ export type VideoVerticalCardProps = {
     video: VideoRecord & Record;
 };
 
-const MAX_DESCRIPTION_LENGTH = 70;
+const MAX_DESCRIPTION_LENGTH = 30;
 
 const VideoHorizontalCard = ({ video }: VideoVerticalCardProps) => {
     return (

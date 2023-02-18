@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import ButtonComponent from "../buttons/ButtonComponent";
 import { useWalletContext } from "../contexts/WalletContext";
+import { ethers } from "ethers";
 
 import loaderIcon from "@/assets/images/loader-bg.gif";
 import metamaskIcon from "@/assets/images/metamask.png";
@@ -9,11 +10,15 @@ import classes from "./NavbarComponent.module.scss";
 import DropdownComponent, { DropdownItem } from "../dropdown/DropdownComponent";
 import { useRouter } from "next/router";
 import Logo from "../logo/Logo";
+import AllowanceDropdown from "../dropdown/AllowanceDropdown";
 
 const NavbarComponent = () => {
-    const { isLoading, account, updateWeb3 } = useWalletContext();
+    const { isLoading, account, updateWeb3, balance } = useWalletContext();
 
-    const [isDropdownActive, setIsDropdownActive] = useState<boolean>(false);
+    const [isAccountDropdownActive, setIsAccountDropdownActive] =
+        useState<boolean>(false);
+    const [isAllowanceDropdownActive, setIsAllowanceDropdownActive] =
+        useState<boolean>(false);
 
     const router = useRouter();
 
@@ -46,7 +51,7 @@ const NavbarComponent = () => {
 
         if (!account) return updateWeb3;
 
-        return () => setIsDropdownActive((oldval) => !oldval);
+        return () => setIsAccountDropdownActive((oldval) => !oldval);
     }, [isLoading, account, updateWeb3]);
 
     const items: DropdownItem[] = [
@@ -55,27 +60,39 @@ const NavbarComponent = () => {
             title: "Create Video",
         },
         {
-            action: "/video/1",
-            title: "View Video",
-        },
-        {
-            action: "/profile/videos",
-            title: "My Videos",
-        },
-        {
-            action: "/profile/account",
-            title: "My Account",
+            action: "/test-tokens",
+            title: "Mint Test $SKY",
         },
     ];
 
     useEffect(() => {
-        setIsDropdownActive(false);
+        setIsAccountDropdownActive(false);
+        setIsAllowanceDropdownActive(false);
     }, [router]);
 
     return (
         <div className={classes.main}>
             <Logo />
             <div className={classes.actions}>
+                {account && (
+                    <div className={classes.dropdown_parent}>
+                        <ButtonComponent
+                            title={`$SKY balance: ${ethers.utils.formatEther(
+                                balance
+                            )}`}
+                            onClick={() =>
+                                setIsAllowanceDropdownActive(
+                                    (oldval) => !oldval
+                                )
+                            }
+                            filled
+                            width="lg"
+                        />
+                        {isAllowanceDropdownActive && (
+                            <AllowanceDropdown />
+                        )}
+                    </div>
+                )}
                 <div className={classes.dropdown_parent}>
                     <ButtonComponent
                         title={getButton1Ctx()}
@@ -84,7 +101,9 @@ const NavbarComponent = () => {
                         filled={getButton1Fill()}
                         width="lg"
                     />
-                    {isDropdownActive && <DropdownComponent items={items} />}
+                    {isAccountDropdownActive && (
+                        <DropdownComponent items={items} />
+                    )}
                 </div>
             </div>
         </div>
