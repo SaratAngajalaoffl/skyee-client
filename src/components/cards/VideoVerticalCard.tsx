@@ -10,8 +10,6 @@ export type VideoVerticalCardProps = {
     video: VideoRecord & Record;
 };
 
-const MAX_DESCRIPTION_LENGTH = 60;
-
 const VideoVerticalCard = ({ video }: VideoVerticalCardProps) => {
     return (
         <Link href={`/video/${video.id}`} className={classes.main}>
@@ -22,14 +20,12 @@ const VideoVerticalCard = ({ video }: VideoVerticalCardProps) => {
                 <Blockies seed={video.uploader} className={classes.avatar} />
                 <div className={classes.text_details}>
                     <h2 className="txt-fg-em-md">{video.title}</h2>
-                    <h4
-                        className={`txt-fg-nm-sm ${classes.description}`}
-                    >{`${video.description?.substring(0, MAX_DESCRIPTION_LENGTH)}${
-                        video.description?.length &&
-                        video.description.length > MAX_DESCRIPTION_LENGTH
-                            ? "..."
-                            : ""
-                    }`}</h4>
+                    <h4 className={`txt-fg-nm-sm ${classes.description}`}>
+                        {video.description}
+                    </h4>
+                    <h4 className={`txt-fg-nm-sm`}>
+                        Price: {video.price} $SKY
+                    </h4>
                 </div>
             </div>
         </Link>

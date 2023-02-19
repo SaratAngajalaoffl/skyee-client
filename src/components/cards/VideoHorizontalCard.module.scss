@@ -35,8 +35,27 @@
 .avatar {
     border-radius: 50%;
 
-    width: 10px;
-    height: 10px;
+    width: 5px;
+    height: 5px;
+
+    margin-right: 10px;
+}
+
+.title {
+    height: 24px;
+    overflow: hidden;
+}
+
+.description {
+    height: 20px;
+    overflow: hidden;
+}
+
+.price {
+    display: flex;
+    flex-direction: row;
+
+    align-items: center;
 
     margin-top: 10px;
 }

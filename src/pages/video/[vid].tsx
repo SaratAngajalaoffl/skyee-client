@@ -2,7 +2,6 @@ import Image from "next/image";
 import { Record } from "pocketbase";
 import { VideoRecord } from "types/pocketbase-types";
 import { Player } from "@livepeer/react";
-import { BigNumber, ethers } from "ethers";
 
 import VideoHorizontalCard from "@/components/cards/VideoHorizontalCard";
 import HeadComponent from "@/components/head/HeadComponent";
@@ -10,10 +9,9 @@ import ConnectWalletWarningModal from "@/components/modals/ConnectWalletWarningM
 import { pb_client, videoCollection } from "@/utils/pocketbase";
 
 import classes from "./VideoPlayer.module.scss";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { useWalletContext } from "@/components/contexts/WalletContext";
-import { useRouter } from "next/router";
 
 type PosterImageProps = {
     thumbnail?: string;
@@ -47,92 +45,50 @@ const PosterImage = ({ thumbnail }: PosterImageProps) => {
 };
 
 const VideoPlayer = ({ videoDetails, suggestions }: VideoPlayerProps) => {
-    const { user, ethersProvider, updateWeb3, skyToken, account } =
-        useWalletContext();
+    const { user, ethersProvider, allowance } = useWalletContext();
     const [video, setVideo] = useState<(VideoRecord & Record) | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-    const [txPending, setTxPending] = useState<boolean>(false);
 
-    const {
-        query: { vid },
-    } = useRouter();
+    const [txCalled, setTxCalled] = useState<boolean>(true);
+
+    const updateVideo = useCallback(async () => {
+        try {
+            setLoading(true);
+            setVideo(null);
+
+            if (!user || !ethersProvider || txCalled) return;
+
+            setTxCalled(true);
+
+            const message = JSON.stringify({
+                userId: user.id,
+                videoId: videoDetails.id,
+                nonce: user.nonce,
+            });
+
+            const signer = ethersProvider.getSigner();
+            const signature = await signer?.signMessage(message);
+
+            const { data } = await axios.post("/api/get-video", {
+                signature,
+                videoId: videoDetails.id,
+                userId: user.id,
+            });
+
+            setVideo(data.video);
+            setLoading(false);
+        } catch (err) {
+            console.log({ err });
+        }
+    }, [user, ethersProvider, videoDetails, txCalled]);
 
     useEffect(() => {
-        setVideo(null);
-
-        console.log("Video Details Changes");
+        setTxCalled(false);
     }, [videoDetails]);
 
-    console.log({ video });
-
     useEffect(() => {
-        (async () => {
-            try {
-                if (
-                    txPending ||
-                    !!video ||
-                    !user ||
-                    !videoDetails ||
-                    !ethersProvider ||
-                    !skyToken ||
-                    !account
-                )
-                    return;
-
-                setLoading(true);
-
-                const adminAddress = process.env.NEXT_PUBLIC_ADMIN_ADDRESS;
-
-                const allowance: BigNumber = await skyToken.allowance(
-                    account,
-                    adminAddress
-                );
-
-                if (
-                    allowance.lt(
-                        ethers.utils.parseEther(
-                            (videoDetails.price || 0).toString()
-                        )
-                    )
-                )
-                    return setTxPending(false);
-
-                setTxPending(true);
-                const message = JSON.stringify({
-                    userId: user.id,
-                    videoId: videoDetails.id,
-                    nonce: user.nonce,
-                });
-
-                const signer = ethersProvider.getSigner();
-                const signature = await signer?.signMessage(message);
-
-                const response = await axios.post("/api/get-video", {
-                    signature,
-                    videoId: videoDetails.id,
-                    userId: user.id,
-                });
-
-                await updateWeb3();
-
-                setVideo(response.data.video);
-                setLoading(false);
-                setTxPending(false);
-            } catch (err) {
-                console.log({ err });
-            }
-        })();
-    }, [
-        video,
-        user,
-        txPending,
-        skyToken,
-        ethersProvider,
-        vid,
-        videoDetails,
-        account,
-        updateWeb3,
-    ]);
+        updateVideo();
+    }, [videoDetails, allowance, updateVideo]);
 
     return (
         <>
@@ -223,6 +179,7 @@ export const getServerSideProps = async ({
                 thumbnail: pb_client.getFileUrl(item, item.thumbnail),
                 description: item.description,
                 uploader: item.uploader,
+                price: item.price,
             })),
         },
     };

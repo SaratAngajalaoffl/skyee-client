@@ -16,8 +16,10 @@ type IWalletContext = {
     account: string | null;
     ethersProvider: ethers.providers.Web3Provider | null;
     updateWeb3: () => any;
+    updateAllowance: () => any;
     user: Record | null;
     balance: ethers.BigNumber;
+    allowance: ethers.BigNumber;
     skyToken?: Contract;
 };
 
@@ -34,6 +36,8 @@ const walletContext = createContext<IWalletContext>({
     updateWeb3: () => {},
     user: null,
     balance: ethers.BigNumber.from(0),
+    allowance: ethers.BigNumber.from(0),
+    updateAllowance: () => {},
 });
 
 const WalletContextProvider = ({ children }: Props) => {
@@ -147,8 +151,6 @@ const WalletContextProvider = ({ children }: Props) => {
 
         const sky_balance = await skyToken.balanceOf(account);
 
-        console.log({ sky_balance });
-
         setBalance(sky_balance);
     }, [skyToken, account]);
 
@@ -176,8 +178,10 @@ const WalletContextProvider = ({ children }: Props) => {
                 account,
                 ethersProvider,
                 updateWeb3,
+                updateAllowance,
                 user,
                 balance,
+                allowance,
                 skyToken,
             }}
         >

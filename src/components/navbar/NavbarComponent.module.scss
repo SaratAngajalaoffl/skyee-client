@@ -1,15 +1,19 @@
+@import "colors.scss";
+
 .main {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     padding: 0px 30px;
-    
+
     height: 10vh;
 
     position: sticky;
     top: 0px;
     z-index: 1;
+
+    background: $clr-bg;
 }
 
 .actions {
