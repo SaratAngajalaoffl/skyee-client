@@ -8,7 +8,7 @@ import {
 
 const client = createReactClient({
     provider: studioProvider({
-        apiKey: "9566791e-34a2-4cdf-8751-9e347d6ae92f",
+        apiKey: process.env.NEXT_PUBLIC_LIVEPEER_KEY || "",
     }),
 });
 

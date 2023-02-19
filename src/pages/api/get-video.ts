@@ -72,6 +72,7 @@ export default async function handler(
                 }
             );
 
+            await userCollection.update(userId, { nonce: nonce + 1 });
             // await tx.wait();
 
             res.status(201).json({
