@@ -18,7 +18,7 @@ import { videoCollection } from "@/utils/pocketbase";
 import { useRouter } from "next/router";
 
 const videoTypes = ["MP4","flv","mkv"];
-const thumbnailTypes = ["GIF", "PNG", "WEBP", "JPEG"];
+const thumbnailTypes = ["GIF", "PNG", "WEBP", "JPEG", "JPG"];
 
 const CreatePage = () => {
     const [video, setVideo] = useState<File | null>(null);
